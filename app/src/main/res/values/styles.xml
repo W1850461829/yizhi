@@ -1,0 +1,24 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="CompatAppTheme">
+        <!-- Customize your theme here. -->
+      <!--  <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>-->
+    </style>
+    <style name="AppBaseTheme" parent="AppThemeLight">
+
+    </style>
+
+    <style name="CompatAppTheme" parent="AppBaseTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="FlashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/flash_bg</item>
+    </style>
+</resources>

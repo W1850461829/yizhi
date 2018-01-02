@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners
+        android:bottomLeftRadius="15dp"
+        android:bottomRightRadius="15dp"
+        android:radius="10dp"
+        android:topLeftRadius="15dp"
+        android:topRightRadius="15dp" />
+    <padding
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp"
+        android:top="2dp" /><!-- 各方向的间隔 -->
+    <solid android:color="@color/shape_count_down_bg" /><!-- 填充的颜色 -->
+</shape>
