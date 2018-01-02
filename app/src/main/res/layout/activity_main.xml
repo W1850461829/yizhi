@@ -14,6 +14,7 @@
         android:orientation="vertical">
 
         <FrameLayout
+            tools:context=".ui.activity.MainActivity"
             android:id="@+id/fl_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -27,6 +28,7 @@
                 app:itemTextColor="@color/selector_bottom_item_color"
                 app:menu="@menu/bottom_navigation_menu" />
     </LinearLayout>
+
     <android.support.design.widget.NavigationView
         android:id="@+id/nv_menu"
         android:layout_width="wrap_content"

@@ -8,17 +8,27 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.navy.yizhi.R;
 import com.navy.yizhi.constant.AppUtils;
+import com.navy.yizhi.constant.BundleKeyConstant;
 import com.navy.yizhi.constant.SpUtils;
+import com.navy.yizhi.constant.ToastUtils;
 import com.navy.yizhi.helper.BottomNavigationViewHelper;
+import com.navy.yizhi.model.bean.rxbus.RxEventHeadBean;
 import com.navy.yizhi.rxbus.RxBus;
+import com.navy.yizhi.rxbus.Subscribe;
+import com.navy.yizhi.ui.fragment.book.BookRootFragment;
+import com.navy.yizhi.ui.fragment.gankio.GankIoRootFragment;
+import com.navy.yizhi.ui.fragment.home.HomeRootFragment;
+import com.navy.yizhi.ui.fragment.home.child.HomeFragment;
+import com.navy.yizhi.ui.fragment.movie.MovieRootFragment;
+import com.navy.yizhi.ui.fragment.personal.PersonalRootFragment;
 import com.navy.yizhi.ui.widgets.MovingImageView;
+import com.navy.yizhi.ui.widgets.MovingViewAnimator;
 import com.navy.yizhi.utils.FileUtils;
 import com.navy.yizhi.utils.NavigationUtils;
 
@@ -29,8 +39,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.yokeyword.fragmentation.SupportFragment;
 
 import static com.navy.yizhi.constant.HeadConstant.HEAD_IMAGE_NAME;
+import static com.navy.yizhi.constant.RxBusCode.RX_BUS_CODE_HEAD_IMAGE_URI;
 
-public class MainActivity extends BaseCompatActivity {
+public class MainActivity extends BaseCompatActivity implements HomeFragment
+        .OnOpenDrawerLayoutListener {
     @BindView(R.id.nv_menu)
     NavigationView nvMenu;
     @BindView(R.id.dl_root)
@@ -48,6 +60,9 @@ public class MainActivity extends BaseCompatActivity {
 
     private MovingImageView mivMenu;
     private CircleImageView civHead;
+    // 再点一次退出程序时间设置
+    private static final long WAIT_TIME = 2000L;
+    private long TOUCH_TIME = 0;
 
     @Override
     protected void initData() {
@@ -63,11 +78,11 @@ public class MainActivity extends BaseCompatActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
+       /* if (savedInstanceState == null) {
             mFragments[FIRST] = HomeRootFragment.newInstance();
             mFragments[SECOND] = GankIoRootFragment.newInstance();
             mFragments[THIRD] = MovieRootFragment.newInstance();
-            mFragments[FOURTH] = BookRootFragmnet.newInstance();
+            mFragments[FOURTH] = BookRootFragment.newInstance();
             mFragments[FIFTH] = PersonalRootFragment.newInatance();
 
             loadMultipleRootFragment(R.id.fl_container, FIRST, mFragments[FIRST], mFragments[SECOND]
@@ -78,9 +93,9 @@ public class MainActivity extends BaseCompatActivity {
             mFragments[FIRST] = findFragment(HomeRootFragment.class);
             mFragments[SECOND] = findFragment(GankIoRootFragment.class);
             mFragments[THIRD] = findFragment(MovieRootFragment.class);
-            mFragments[FOURTH] = findFragment(BookRootFragmnet.class);
+            mFragments[FOURTH] = findFragment(BookRootFragment.class);
             mFragments[FIFTH] = findFragment(PersonalRootFragment.class);
-        }
+        }*/
 
         NavigationUtils.disableNavigationViewScrollbars(nvMenu);
         mivMenu = (MovingImageView) nvMenu.getHeaderView(0).findViewById(R.id.miv_menu);
@@ -136,11 +151,74 @@ public class MainActivity extends BaseCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.group_item_github:
+                      /*  Bundle bundle = new Bundle();
+                        bundle.putString(BundleKeyConstant.ARG_KEY_WEB_VIEW_LOAD_TITLE, "Yizhi");
+                        bundle.putString(BundleKeyConstant.ARG_KEY_WEB_VIEW_LOAD_URL,
+                                "https://github.com/Horrarndoo/YiZhi");
+                        startActivity(WebViewLoadActivity.class, bundle);
+                        break;*/
+                    case R.id.group_item_more:
+                     /*   Bundle bundle2 = new Bundle();
+                        bundle2.putString(BundleKeyConstant.ARG_KEY_WEB_VIEW_LOAD_TITLE,
+                                "Horrarndoo");
+                        bundle2.putString(BundleKeyConstant.ARG_KEY_WEB_VIEW_LOAD_URL,
+                                "http://blog.csdn.net/oqinyou");
+                        startActivity(WebViewLoadActivity.class, bundle2);
+                        break;*/
+                    case R.id.group_item_qr_code:
+                        startActivity(QRCodeActivity.class);
+                        break;
+                    case R.id.group_item_share_project:
+                        showShare();
+                        break;
+                    case R.id.item_model:
+                        SpUtils.setNightModel(mContext, !SpUtils.getNightModel(mContext));
+                        MainActivity.this.reload();
+                        break;
+                    case R.id.item_about:
+                        startActivity(AboutActivity.class);
+                        break;
 
                 }
+                item.setCheckable(false);
+                dlRoot.closeDrawer(GravityCompat.START);
                 return true;
             }
         });
+        dlRoot.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                mivMenu.pauseMoving();
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                if (mivMenu.getMovingState() == MovingViewAnimator.MovingState.stop) {
+                    mivMenu.startMoving();
+                } else if (mivMenu.getMovingState() == MovingViewAnimator.MovingState.pause) {
+                    mivMenu.resumeMoving();
+                }
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                mivMenu.stopMoving();
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                if (mivMenu.getMovingState() == MovingViewAnimator.MovingState.stop) {
+                    mivMenu.startMoving();
+                } else if (mivMenu.getMovingState() == MovingViewAnimator.MovingState.pause) {
+                    mivMenu.resumeMoving();
+                }
+            }
+        });
+
+    }
+
+    private void showShare() {
 
     }
 
@@ -148,5 +226,50 @@ public class MainActivity extends BaseCompatActivity {
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
+    }
+
+    @Override
+    public void onBackPressedSupport() {
+        super.onBackPressedSupport();
+        if (dlRoot.isDrawerOpen(GravityCompat.START)) {
+            dlRoot.closeDrawer(GravityCompat.START);
+            return;
+        }
+        if (getFragmentManager().getBackStackEntryCount() > 1) {
+            pop();
+        } else {
+            if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
+                setIsTransAnim(false);
+                finish();
+            } else {
+                TOUCH_TIME = System.currentTimeMillis();
+                ToastUtils.showToast(R.string.press_again);
+            }
+        }
+    }
+
+    @Override
+    public void onOpen() {
+        if (!dlRoot.isDrawerOpen(GravityCompat.START)) {
+            dlRoot.openDrawer(GravityCompat.START);
+        }
+    }
+
+
+    /**
+     * RxBus接收图片Uri
+     *
+     * @param bean RxEventHeadBean
+     */
+    @Subscribe(code = RX_BUS_CODE_HEAD_IMAGE_URI)
+    public void rxBusEvent(RxEventHeadBean bean) {
+        Uri uri = bean.getUri();
+        if (uri == null) {
+            return;
+        }
+        String cropImagePath = FileUtils.getRealFilePathFromUri(AppUtils.getContext(), uri);
+        Bitmap bitMap = BitmapFactory.decodeFile(cropImagePath);
+        if (bitMap != null)
+            civHead.setImageBitmap(bitMap);
     }
 }
