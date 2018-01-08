@@ -42,7 +42,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.QRCodeActivity" />
-        <activity android:name=".ui.activity.AboutActivity"></activity>
+        <activity android:name=".ui.activity.AboutActivity" />
+        <activity android:name=".ui.activity.detail.WebViewLoadActivity"></activity>
     </application>
 
 </manifest>

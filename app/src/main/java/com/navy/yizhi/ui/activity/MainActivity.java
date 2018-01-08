@@ -78,7 +78,7 @@ public class MainActivity extends BaseCompatActivity implements HomeFragment
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-       /* if (savedInstanceState == null) {
+       if (savedInstanceState == null) {
             mFragments[FIRST] = HomeRootFragment.newInstance();
             mFragments[SECOND] = GankIoRootFragment.newInstance();
             mFragments[THIRD] = MovieRootFragment.newInstance();
@@ -95,7 +95,7 @@ public class MainActivity extends BaseCompatActivity implements HomeFragment
             mFragments[THIRD] = findFragment(MovieRootFragment.class);
             mFragments[FOURTH] = findFragment(BookRootFragment.class);
             mFragments[FIFTH] = findFragment(PersonalRootFragment.class);
-        }*/
+        }
 
         NavigationUtils.disableNavigationViewScrollbars(nvMenu);
         mivMenu = (MovingImageView) nvMenu.getHeaderView(0).findViewById(R.id.miv_menu);
@@ -152,20 +152,20 @@ public class MainActivity extends BaseCompatActivity implements HomeFragment
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.group_item_github:
-                      /*  Bundle bundle = new Bundle();
+                        Bundle bundle = new Bundle();
                         bundle.putString(BundleKeyConstant.ARG_KEY_WEB_VIEW_LOAD_TITLE, "Yizhi");
                         bundle.putString(BundleKeyConstant.ARG_KEY_WEB_VIEW_LOAD_URL,
                                 "https://github.com/Horrarndoo/YiZhi");
                         startActivity(WebViewLoadActivity.class, bundle);
-                        break;*/
+                        break;
                     case R.id.group_item_more:
-                     /*   Bundle bundle2 = new Bundle();
+                       Bundle bundle2 = new Bundle();
                         bundle2.putString(BundleKeyConstant.ARG_KEY_WEB_VIEW_LOAD_TITLE,
                                 "Horrarndoo");
                         bundle2.putString(BundleKeyConstant.ARG_KEY_WEB_VIEW_LOAD_URL,
                                 "http://blog.csdn.net/oqinyou");
                         startActivity(WebViewLoadActivity.class, bundle2);
-                        break;*/
+                        break;
                     case R.id.group_item_qr_code:
                         startActivity(QRCodeActivity.class);
                         break;

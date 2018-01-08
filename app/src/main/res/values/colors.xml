@@ -73,4 +73,11 @@
 
     <!--电影评分-->
     <color name="colorRateRed">#FB5B81</color>
+
+
+    <!--页面背景的颜色-->
+    <color name="colorPageBg">#f2f4f5</color>
+
+    <!--item的水波纹颜色-->
+    <color name="itemBackground">#DD7D7D7D</color>
 </resources>
